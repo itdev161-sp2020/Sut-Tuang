@@ -40,9 +40,14 @@ app.get('/', (req, res) =>
 app.post(
 	'/api/users', 
 	[
-		check('name', 'Please enter your name').not().isEmpty(),
+		check('name', 'Please enter your name')
+		.not().
+		isEmpty(),
+		
 		check('email', 'Please enter a valid email').isEmail(),
-		check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 })
+
+		check('password', 'Please enter a password with 6 or more characters').
+		isLength({ min: 6 })
 	],
 	async (req, res) => {
 		// console.log(req.body);
