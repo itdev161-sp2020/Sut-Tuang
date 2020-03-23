@@ -72,6 +72,7 @@ app.post(
 				// Save to the db and return
 				await user.save();
 				res.send('User successfully registered');
+				
 			} catch(error) {
 				res.status(500).send('Server error');
 			}
