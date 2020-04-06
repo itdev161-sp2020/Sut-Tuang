@@ -1,4 +1,3 @@
 {
-  "mongoURI" : "mongodb+srv://root:pass@cluster0-gje8v.mongodb.net/test?retryWrites=true&w=majority",
-  "jwtSecret" : "soverysecret"
+  "mongoURI" : "mongodb+srv://root:pass@cluster0-gje8v.mongodb.net/test?retryWrites=true&w=majority"
 }
