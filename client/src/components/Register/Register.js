@@ -12,12 +12,12 @@ const Register = () => {
 
     const { name, email, password, passwordConfirm } = userData;
 
-    const onChange = e => {
+    const onChange = (e) => {
         const { name, value } = e.target;
         setUserData({
             ...userData,
             [name]: value
-        });
+        })
     }
 
     const register = async () => {
@@ -33,7 +33,7 @@ const Register = () => {
             try {
                 const config = {
                     headers: {
-                        'Content-type' : 'application/json'
+                        'Content-Type' : 'application/json'
                     }
                 }
                
@@ -91,5 +91,6 @@ const Register = () => {
             </div>
         </div>
     )
-
 }
+
+export default Register;
