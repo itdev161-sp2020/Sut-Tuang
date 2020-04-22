@@ -39,7 +39,7 @@ class App extends React.Component {
     if(token){
       const config = {
         headers: {
-          'x-auth=token': token
+          'x-auth-token': token
         }
       }
 
