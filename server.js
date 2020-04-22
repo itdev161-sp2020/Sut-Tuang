@@ -144,7 +144,7 @@ app.post(
 const returnToken = (user, res) => {
 	const payload = {
 		user: {
-			id: user.id;
+			id: user.id
 		}
 	};
 
