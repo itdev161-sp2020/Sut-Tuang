@@ -143,7 +143,7 @@ app.post(
 );
 
 /**
- * @route GET api/posts
+ * @route POST api/posts
  * @desc Create post
  */
 app.post(
@@ -185,6 +185,21 @@ app.post(
 		}	
 	}
 );
+
+/**
+ * @route GET api/posts
+ * @desc Get posts
+ */
+app.get('/api/posts', auth, async (req, res) => {
+	try{
+		const posts = await Post.find().sort({ date: -1 });
+
+		res.json(posts);
+	}catch(error){
+		console.error(error);
+		res.status(500).send('Server error');
+	}
+});
 
 
 const returnToken = (user, res) => {
