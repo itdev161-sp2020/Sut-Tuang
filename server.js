@@ -142,6 +142,7 @@ app.post(
 	}
 );
 
+
 /**
  * @route POST api/posts
  * @desc Create post
@@ -164,17 +165,17 @@ app.post(
 		}else{
 			const { title, body } = req.body;
 			try {
-				//Get the user who created the post
+				// Get the user who created the post
 				const user = await User.findById(req.user.id);
 
-				//Create a new post
+				// Create a new post
 				const post = new Post({
 					user: user.id,
 					title: title,
 					body: body
 				});
 
-				//Save to the db and return
+				// Save to the db and return
 				await post.save();
 				
 				res.json(post);
@@ -185,6 +186,7 @@ app.post(
 		}	
 	}
 );
+
 
 /**
  * @route GET api/posts
@@ -201,6 +203,7 @@ app.get('/api/posts', auth, async (req, res) => {
 	}
 });
 
+
 /**
  * @route GET api/posts/:id
  * @desc Get post
@@ -209,7 +212,7 @@ app.get('/api/posts/:id', auth, async (req, res) => {
 	try{
 		const post = await Post.findById(req.params.id);
 
-		//Make sure the post was found
+		// Make sure the post was found
 		if(!post){
 			return res.status(404).json({ msg: 'Post not found' });
 		}
@@ -221,6 +224,7 @@ app.get('/api/posts/:id', auth, async (req, res) => {
 	}
 });
 
+
 /**
  * @route DELETE api/posts/:id
  * @desc DELETE a post
@@ -229,12 +233,12 @@ app.delete('/api/posts/:id', auth, async (req, res) => {
 	try{
 		const post = await Post.findById(req.params.id);
 
-		//Make sure the post was found
+		// Make sure the post was found
 		if(!post){
 			return res.status(404).json({ msg: 'Post not found' });
 		}
 
-		//Make sure the request user created the post
+		// Make sure the request user created the post
 		if(post.user.toString() !== req.user.id){
 			return res.status(401).json({ msg: 'User not authorized' });
 		}
@@ -247,6 +251,7 @@ app.delete('/api/posts/:id', auth, async (req, res) => {
 		res.status(500).send('Server error');
 	}
 });
+
 
 /**
  * @route PUT api/posts/:id
@@ -262,12 +267,12 @@ app.put('/api/posts/:id', auth, async (req, res) => {
 			return res.status(404).json({ msg: 'Post not found' });
 		}
 
-		//Make sure the request user created the post
+		// Make sure the request user created the post
 		if(post.user.toString() !== req.user.id){
 			return res.status(401).json({ msg: 'User not authorized' });
 		}
 
-		//Update the post and return
+		// Update the post and return
 		post.title = title || post.title;
 		post.body = body || post.body;
 
