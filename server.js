@@ -214,7 +214,7 @@ app.get('/api/posts/:id', auth, async (req, res) => {
 			return res.status(404).json({ msg: 'Post not found' });
 		}
 
-		res.json(posts);
+		res.json(post);
 	}catch(error){
 		console.error(error);
 		res.status(500).send('Server error');
