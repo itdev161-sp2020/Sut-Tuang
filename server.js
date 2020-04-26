@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from 'config';
 import User from './models/User';
+import Post from './models/Post';
 import auth from './middleware/auth';
 
 
@@ -93,14 +94,14 @@ app.post(
  * @route GET api/auth
  * @desc Auuthenticate user(jwt/token)
  */
- app.get('/api/auth', auth, async (req, res) =>{
+app.get('/api/auth', auth, async (req, res) =>{
 	try {
 		const user = await User.findById(req.user.id);
 		res.status(200).json(user);
 	} catch(error){
 		res.status(500).send('Unknown server error');
 	}
- });
+});
 
  /**
  * @route POST api/login
@@ -140,6 +141,51 @@ app.post(
 		}
 	}
 );
+
+/**
+ * @route GET api/posts
+ * @desc Create post
+ */
+app.post(
+	'/api/posts',
+	[
+		auth,
+		[
+			check('title', 'Title text is required').not().isEmpty(),
+			check('body', 'Body text is required').not().isEmpty()
+		]
+	],
+	async (req, res) => {
+
+		const errors = validationResult(req);
+
+		if(!errors.isEmpty()){
+			res.status(400).json({ errors: errors.array() });
+		}else{
+			const { title, body } = req.body;
+			try {
+				//Get the user who created the post
+				const user = await User.findById(req.user.id);
+
+				//Create a new post
+				const post = new Post({
+					user: user.id,
+					title: title,
+					body: body
+				});
+
+				//Save to the db and return
+				await post.save();
+				
+				res.json(post);
+			}catch(error){
+				console.error(error);
+				res.status(500).send('Server error');
+			}
+		}	
+	}
+);
+
 
 const returnToken = (user, res) => {
 	const payload = {
