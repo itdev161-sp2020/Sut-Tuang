@@ -4,15 +4,18 @@ import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 import './App.css';
 import Register from './components/Register/Register';
 import Login from './components/Login/Login';
+import PostList from './components/PostList/PostList';
+import Post from './components/Post/Post';
 
 
 class App extends React.Component {
 
   state = {
     posts: [],
+    post: null,
     token: null,
     user: null
-  }
+  };
 
   componentDidMount() {
     axios.get('http://localhost:5000')
@@ -26,7 +29,14 @@ class App extends React.Component {
       })
 
       this.authenticateUser();
-  }
+  };
+
+  viewPost = post => {
+    console.log(`view ${post.title}`);
+    this.setState({
+      post: post
+    });
+  };
 
   loadData = () => {
     const { token } = this.state;
@@ -49,14 +59,14 @@ class App extends React.Component {
           console.error(`Error fetching data: ${error}`);
         });
     }
-  }
+  };
 
   authenticateUser = () => {
     const token = localStorage.getItem('token');
 
     if(!token){
       localStorage.removeItem('user');
-      this.setState({ user: null });
+      this.setState({ token: null });
     }
 
     if(token){
@@ -85,16 +95,16 @@ class App extends React.Component {
             console.error(`Error logging in: ${error}`);
           });
     }
-  }
+  };
 
   logOut = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.setState({ user: null, token: null });
-  }
+  };
 
   render(){
-    let { user, posts } = this.state;
+    let { user, posts, post } = this.state;
     const authProps = {
       authenticateUser: this.authenticateUser
     }
@@ -120,38 +130,34 @@ class App extends React.Component {
             </ul>
           </header>
           <main>
+          <Switch>
             <Route exact path="/">
               {user ? (
                 <React.Fragment>
                   <div>Hello {user}!</div>
-                  <div>
-                    {posts.map(post => (
-                      <div key={post._id}>
-                        <h1>{post.title}</h1>
-                        <p>{post.body}</p>
-                      </div>
-                    ))}
-                  </div>
+                  <PostList posts={posts} clickPost={this.viewPost} />
                 </React.Fragment> 
               ) : (
                 <React.Fragment>Please Register or Login</React.Fragment>
               )}
             </Route>
-            <Switch>
-              <Route 
-                exact path ="/register" 
-                render={() => <Register {...authProps}/>} 
-              />
-              <Route 
-                exact path ="/login" 
-                render={() => <Login {...authProps}/>}
-              />
-            </Switch>
+            <Route path="/posts/:postId">
+                <Post post={post} /> 
+            </Route>
+            <Route 
+              exact path ="/register" 
+              render={() => <Register {...authProps}/>} 
+            />
+            <Route 
+              exact path ="/login" 
+              render={() => <Login {...authProps}/>}
+            />
+          </Switch>
           </main>
         </div>
       </Router>
     )
-  }
+  };
 
 }
 
