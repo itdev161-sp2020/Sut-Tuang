@@ -4,7 +4,7 @@ import slugify from 'slugify';
 import './styles.css';
 
 const PostListItem = props => {
-    const { post, clickPost } = props;
+    const { post, clickPost, deletePost } = props;
     const history = useHistory();
 
     const hanndleClickPost = post => {
@@ -19,6 +19,9 @@ const PostListItem = props => {
             <div className="postListItem" onClick={() => hanndleClickPost(post)}>
                 <h2>{post.title}</h2>
                 <p>{post.body}</p>
+            </div>
+            <div className="postControls">
+                <button onClick={() => deletePost(post)}>Delete</button>
             </div>
         </div>
     );
