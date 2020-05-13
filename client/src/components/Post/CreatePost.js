@@ -3,54 +3,56 @@ import axios from 'axios';
 import {useHistory} from 'react-router-dom';
 import './styles.css';
 
-const CreatePost = ({ onPostCreated }) => {
-    let historoy = useHistory();
-
-    const [postData, setPostData] = useState({
+const CreatePost = (props)=>{
+    let history = useHistory();
+    const {token,onPostCreated} = props;
+    const[postData,setPostData]=useState({
         title: '',
-        body: ''
+        body:''
     });
 
-    const { title, body } = postData;
+    const { title, body} = postData;
 
-    const onChange = e => {
-        const { name, value } = e.target;
+    const onChange =  e => {
+        const {name,value} = e.target;
 
         setPostData({
+            //update the spread with whatever key :value pair matches
             ...postData,
-            [name]: value
-        });
-    };
-};
+            [name]:value
+        })
+    }
 
-const create = async () => {
-    if(!title || !body){
-        console.log('Title and body are required');
-    }else{
-        const newPost = {
-            title: title,
-            body: body
-        };
-
-        try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-auth-token': token
-                }
+    //attempt to add post to db and update page
+    const create = async() =>{
+        if(!title || !body){
+            console.log('Title and body are required!');
+        }else{
+            const newPost ={
+                title: title,
+                body: body
             };
 
-            const body = JSON.stringify(newPost);
-            const res = await axios.post(
-                'http://localhost:5000/api/posts',
-                body,
-                config
-            );
-            
-            onPostCreated(res.data);
-            history.push('/');
-        } catch(error) {
-            console.error(`Error creating post: ${error.response.data}`);
+            try{
+                const config = {
+                    headers: {
+                        'Content-Type' : 'application/json',
+                        'x-auth-token' : token
+                    }
+                };
+
+                const body = JSON.stringify(newPost);
+                const res = await axios.post(
+                    'http://localhost:5000/api/posts',
+                    body,
+                    config
+                );
+
+                onPostCreated(res.data);
+                history.push('/');
+            }catch(error){
+                console.error(`Error creating post: ${error.response.data}`);
+            }
         }
     }
 
