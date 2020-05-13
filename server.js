@@ -285,8 +285,6 @@ app.put('/api/posts/:id', auth, async (req, res) => {
 	}
 });
 
-
-
 const returnToken = (user, res) => {
 	const payload = {
 		user: {
